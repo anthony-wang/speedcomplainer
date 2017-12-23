@@ -10,7 +10,6 @@ import json
 import random
 from logger import Logger
 import urllib, json
-#url = "http://api.icndb.com/jokes/random"
 
 shutdownFlag = False
 debug = True
@@ -54,17 +53,11 @@ class Monitor():
 
     def run(self):
         if not self.lastPingCheck or (datetime.now() - self.lastPingCheck).total_seconds() >= 60:
-            if debug:
-               print 'last ping check >= 60'
-        self.runPingTest()
+            self.runPingTest()
             self.lastPingCheck = datetime.now()
 
         if not self.lastSpeedTest or (datetime.now() - self.lastSpeedTest).total_seconds() >= 3600:
-            if debug:
-               print 'last ping check >= 3600'
-        self.runSpeedTest()
-            if debug:
-               print 'running speed test'
+            self.runSpeedTest()
             self.lastSpeedTest = datetime.now()
 
     def runPingTest(self):
