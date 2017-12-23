@@ -1,6 +1,8 @@
 # speedcomplainer
 A python app that will test your internet connection and then complain to your service provider (and log to a data store if you'd like)
 
++ it will add a random Chuck Norris joke at the end to keep you and your slow provider entertained
+
 ## Configuration
 Configuration is handled by a basic JSON file. Things that can be configured are:
 * twitter
