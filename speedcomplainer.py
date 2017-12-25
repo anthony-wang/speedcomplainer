@@ -12,7 +12,7 @@ from logger import Logger
 import urllib, json
 
 shutdownFlag = False
-debug = True
+debug = False
 
 def main(filename, argv):
     print "======================================"
@@ -27,7 +27,6 @@ def main(filename, argv):
 
     while not shutdownFlag:
         try:
-
             monitor.run()
 
             for i in range(0, 5):
@@ -50,6 +49,7 @@ class Monitor():
     def __init__(self):
         self.lastPingCheck = None
         self.lastSpeedTest = None
+        self.lastChuckJoke = None
 
     def run(self):
         if not self.lastPingCheck or (datetime.now() - self.lastPingCheck).total_seconds() >= 60:
@@ -60,6 +60,8 @@ class Monitor():
             self.runSpeedTest()
             self.lastSpeedTest = datetime.now()
 
+        self.runChuckJoke()
+
     def runPingTest(self):
         pingThread = PingTest()
         pingThread.start()
@@ -67,6 +69,12 @@ class Monitor():
     def runSpeedTest(self):
         speedThread = SpeedTest()
         speedThread.start()
+
+    def runChuckJoke(self):
+        if debug:
+            print 'going chuck....'
+        chuckThread = ChuckJoke()
+        chuckThread.start()
 
 class PingTest(threading.Thread):
     def __init__(self, numPings=3, pingTimeout=2, maxWaitTime=6):
@@ -94,6 +102,34 @@ class PingTest(threading.Thread):
 
     def logPingResults(self, pingResults):
         self.logger.log([ pingResults['date'].strftime('%Y-%m-%d %H:%M:%S'), str(pingResults['success'])])
+
+class ChuckJoke(threading.Thread):
+    def __init__(self, joke=""):
+        super(ChuckJoke, self).__init__()
+        if debug:
+            print 'Chuck - init'
+        self.joke = ""
+        self.config = json.load(open('./config.json'))
+        self.logger = Logger(self.config['log']['type'], { 'filename': self.config['log']['files']['chuck'] })
+    
+    def run(self):
+        chucksJoke = self.doGetJoke()
+        self.logChuckJoke(chucksJoke)
+
+    def doGetJoke(self):
+        if debug:
+            print 'Chuck - trying to get chucks joke'
+        url = "http://api.icndb.com/jokes/random"
+        response = urllib.urlopen(url)
+        data = json.loads(response.read())
+        if debug:
+            print 'Chuck - joke: %s' % data['value']['joke'] 
+        self.joke = data['value']['joke']
+        # return {'joke' : data['value']['joke'] }
+        return data['value']['joke']
+
+    def logChuckJoke(self, joke):
+        self.logger.log([str(datetime.now()), str(joke)])
 
 class SpeedTest(threading.Thread):
     def __init__(self):
@@ -135,8 +171,6 @@ class SpeedTest(threading.Thread):
     def logSpeedTestResults(self, speedTestResults):
         self.logger.log([ speedTestResults['date'].strftime('%Y-%m-%d %H:%M:%S'), str(speedTestResults['uploadResult']), str(speedTestResults['downloadResult']), str(speedTestResults['ping']) ])
 
-
-
     def tweetResults(self, speedTestResults):
         thresholdMessages = self.config['tweetThresholds']
         message = None
@@ -148,13 +182,13 @@ class SpeedTest(threading.Thread):
             if debug:
                 print 'threshold %f' % (threshold)
                 print 'speedTestResults %s' % (speedTestResults['downloadResult'])
+                #print ChuckJoke.joke
             if speedTestResults['downloadResult'] < threshold:
                 message = messages[random.randint(0, len(messages) - 1)].replace('{tweetTo}', self.config['tweetTo']).replace('{internetSpeed}', self.config['internetSpeed']).replace('{downloadResult}', str(speedTestResults['downloadResult']))
+
                 # add some Chuck Norris to it
-                url = "http://api.icndb.com/jokes/random"
-                response = urllib.urlopen(url)
-                data = json.loads(response.read())
-                message = message + ' And by the way: "' +data['value']['joke'] + '"'
+                instance = ChuckJoke()
+                message = message + ' And by the way: "' +str(instance.doGetJoke()) + '"'
 
 
         if message:
