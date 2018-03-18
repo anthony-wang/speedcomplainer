@@ -12,9 +12,10 @@ import json
 import random
 from logger import Logger
 import urllib, json
+import HTMLParser
 
 shutdownFlag = False
-debug = False
+debug = True
 
 def main(filename, argv):
     print "======================================"
@@ -120,7 +121,7 @@ class ChuckJoke(threading.Thread):
 
     def doGetJoke(self):
         if debug:
-            print 'Chuck - trying to get chucks joke'
+            print 'Chuck - trying to get a Chuck Norris joke'
         url = "https://api.icndb.com/jokes/random"
         response = urllib.urlopen(url)
         data = json.loads(response.read())
@@ -148,7 +149,8 @@ class SpeedTest(threading.Thread):
 
     def doSpeedTest(self):
         # run a speed test
-        result = os.popen("/usr/local/bin/speedtest-cli --simple").read()
+        # result = os.popen("/usr/local/bin/speedtest-cli --simple").read()
+        result = os.popen("speedtest-cli --simple").read()
         if 'Cannot' in result:
             return { 'date': datetime.now(), 'uploadResult': 0, 'downloadResult': 0, 'ping': 0 }
 
@@ -184,15 +186,22 @@ class SpeedTest(threading.Thread):
             if debug:
                 print 'threshold %f' % (threshold)
                 print 'speedTestResults %s' % (speedTestResults['downloadResult'])
-                #print ChuckJoke.joke
+                # print ChuckJoke.joke
             if speedTestResults['downloadResult'] < threshold:
                 message = messages[random.randint(0, len(messages) - 1)].replace('{tweetTo}', self.config['tweetTo']).replace('{internetSpeed}', self.config['internetSpeed']).replace('{internetUpSpeed}', self.config['internetUpSpeed']).replace('{downloadResult}', str(speedTestResults['downloadResult'])).replace('{uploadResult}', str(speedTestResults['uploadResult']))
-                message = message + str(self.config['appendText']) + '.'
+                message = message + ' ' + str(self.config['appendText']) + '.'
 
-                # add some Chuck Norris to the tweet
-                instance = ChuckJoke()
-                message = message + ' And by the way: "' + str(instance.doGetJoke()) + '"'
+        # add some Chuck Norris to the tweet
+        instance = ChuckJoke()
+        message = message + ' And by the way: "' + str(instance.doGetJoke()) + '"'
 
+        # truncate message if it's over Twitter's max character limit. Not necessary using when using the "PostUpdates" method from twitter API
+        if len(message) > 500:
+            message = message[500] + '...' 
+
+        message = HTMLParser.HTMLParser().unescape(message)
+        if debug:
+                print 'message %s' % (message)
 
         if message:
             api = twitter.Api(consumer_key=self.config['twitter']['twitterConsumerKey'],
@@ -200,10 +209,10 @@ class SpeedTest(threading.Thread):
                             access_token_key=self.config['twitter']['twitterToken'],
                             access_token_secret=self.config['twitter']['twitterTokenSecret'])
             if api:
-                status = api.PostUpdate(message)
+                status = api.PostUpdates(message, continuation=u'\u2026')
 
                 if debug:
-                    print 'message %s...' % (message) 
+                    print 'message %s...' % (message)
                     print 'api %s' % (api)
 
 
