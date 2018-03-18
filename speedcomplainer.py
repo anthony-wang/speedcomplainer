@@ -114,7 +114,7 @@ class ChuckJoke(threading.Thread):
             print 'Chuck - init'
         self.joke = ""
         self.config = json.load(open('./config.json'))
-        # self.logger = Logger(self.config['log']['type'], { 'filename': self.config['log']['files']['chuck'] })
+        self.logger = Logger(self.config['log']['type'], { 'filename': self.config['log']['files']['chuck'] })
     
     def run(self):
         chucksJoke = self.doGetJoke()
@@ -169,7 +169,7 @@ class SpeedTest(threading.Thread):
         downloadResult = float(downloadResult.replace('Download: ', '').replace(' Mbit/s', ''))
         uploadResult = float(uploadResult.replace('Upload: ', '').replace(' Mbit/s', ''))
         if debug:
-            print 'speed test results: (%f: %f: %f).' % (pingResult, downloadResult, uploadResult)
+            print 'speed test results: (%f: %f: ping %f).' % (downloadResult, uploadResult, pingResult)
 
         return { 'date': datetime.now(), 'uploadResult': uploadResult, 'downloadResult': downloadResult, 'ping': pingResult }
 
@@ -193,12 +193,12 @@ class SpeedTest(threading.Thread):
                 message = message + ' ' + str(self.config['appendText']) + '.'
 
         # add some Chuck Norris to the tweet
-        instance = ChuckJoke()
+        # instance = ChuckJoke()
         # message = message + ' And by the way: "' + str(instance.doGetJoke()) + '"'
 
         # truncate message if it's over Twitter's max character limit. Not necessary using when using the "PostUpdates" method from twitter API
-        if len(message) > 500:
-            message = message[500] + '...' 
+        # if len(message) > 500:
+        #     message = message[500] + '...'
 
         message = HTMLParser.HTMLParser().unescape(message)
         if debug:
