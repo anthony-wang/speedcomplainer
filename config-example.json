@@ -24,13 +24,19 @@
             "Well {tweetTo} I guess {downloadResult} Mb/s is better than nothing, still not good it when I expect {internetSpeed} Mb/s",
             "Uhh {tweetTo} I expect better than {downloadResult} Mb/s when I'm paying for {internetSpeed} Mb/s. Fix your network!",
             "Hey {tweetTo} why am I only getting {downloadResult} Mb/s when I pay for {internetSpeed} Mb/s?"
+        ],
+        "150": [
+            "Well {tweetTo} I guess {downloadResult} Mb/s is better than nothing, still not good it when I expect {internetSpeed} Mb/s",
+            "Uhh {tweetTo} I expect better than {downloadResult} Mb/s when I'm paying for {internetSpeed} Mb/s. Fix your network!",
+            "Hey {tweetTo} why am I only getting {downloadResult} Mb/s when I pay for {internetSpeed} Mb/s?"
         ]
     },
     "log": {
         "type": "csv",
         "files": {
             "ping": "pingresults.csv",
-            "speed": "speedrestuls.csv"
+            "speed": "speedresults.csv",
+            "chuck": "chucks.csv"
         }
     }
 }

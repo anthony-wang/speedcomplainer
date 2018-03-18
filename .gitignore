@@ -101,6 +101,6 @@ ENV/
 .mypy_cache/
 
 # other
-.csv
+*.csv
 .idea
 config.json

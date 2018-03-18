@@ -15,7 +15,7 @@ import urllib, json
 import HTMLParser
 
 shutdownFlag = False
-debug = True
+debug = False
 
 def main(filename, argv):
     print "======================================"
@@ -80,7 +80,7 @@ class Monitor():
         chuckThread.start()
 
 class PingTest(threading.Thread):
-    def __init__(self, numPings=3, pingTimeout=2, maxWaitTime=6):
+    def __init__(self, numPings=5, pingTimeout=2, maxWaitTime=6):
         super(PingTest, self).__init__()
         self.numPings = numPings
         self.pingTimeout = pingTimeout
@@ -193,7 +193,7 @@ class SpeedTest(threading.Thread):
 
         # add some Chuck Norris to the tweet
         instance = ChuckJoke()
-        message = message + ' And by the way: "' + str(instance.doGetJoke()) + '"'
+        # message = message + ' And by the way: "' + str(instance.doGetJoke()) + '"'
 
         # truncate message if it's over Twitter's max character limit. Not necessary using when using the "PostUpdates" method from twitter API
         if len(message) > 500:
