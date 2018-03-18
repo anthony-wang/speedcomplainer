@@ -95,6 +95,7 @@ class PingTest(threading.Thread):
         self.logPingResults(pingResults)
 
     def doPingTest(self):
+        # NOTE: the ping command is OS-specific. The below works on Linux (not even on MacOS!)
         response = os.system("ping -c %s -W %s -w %s 8.8.8.8 > /dev/null 2>&1" % (self.numPings, (self.pingTimeout * 1000), self.maxWaitTime))
         success = 0
         if debug:
@@ -113,7 +114,7 @@ class ChuckJoke(threading.Thread):
             print 'Chuck - init'
         self.joke = ""
         self.config = json.load(open('./config.json'))
-        self.logger = Logger(self.config['log']['type'], { 'filename': self.config['log']['files']['chuck'] })
+        # self.logger = Logger(self.config['log']['type'], { 'filename': self.config['log']['files']['chuck'] })
     
     def run(self):
         chucksJoke = self.doGetJoke()
