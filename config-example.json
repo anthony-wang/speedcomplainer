@@ -5,19 +5,25 @@
         "twitterTokenSecret": "",
         "twitterConsumerSecret": ""
     },
-    "tweetTo": "",
-    "internetSpeed": "50",
+    "tweetTo": "#vodafoneDE",
+    "appendText":"#vodafoneoutage #vodafone #vodafoneservice #gigaspeed #speedtest #allestoerungen #kabelinternet",
+    "internetSpeed": "200",
+    "internetUpSpeed": "12",
     "tweetThresholds": {
         "5": [
-            "Hey {tweetTo} I'm paying for {internetSpeed}Mb/s but getting only {downloadResult} Mb/s?!? Shame.",
-            "Oi! {tweetTo} $100+/month for {internetSpeed}Mbit/s and I only get {downloadResult} Mbit/s? How does that seem fair?"
+            "Hey {tweetTo} what's going on with the internet? I'm supposed to get {internetSpeed} Mb/s but getting only {downloadResult} Mb/s?!? :(",
+            "Uhh {tweetTo} what's going on with the internet? I'm supposed to get {internetSpeed} Mb/s but getting only {downloadResult} Mb/s?!? :(",
+            "Hey {tweetTo}, why is my internet so slow? I pay for {internetSpeed} Mb/s but I'm only getting {downloadResult} Mb/s in Berlin?"
         ],
         "12.5": [
-            "Uhh {tweetTo} for $100+/month I expect better than {downloadResult}Mbit/s when I'm paying for {internetSpeed}Mbit/s. Fix your network!",
-            "Hey {tweetTo} why am I only getting {downloadResult}Mb/s when I pay for {internetSpeed}Mb/s? $100+/month for this??"
+            "Uhh {tweetTo} I expect better than {downloadResult} Mb/s when I'm paying for {internetSpeed} Mb/s. Fix your network!",
+            "Hey {tweetTo} why am I only getting {downloadResult} Mb/s when I pay for {internetSpeed} Mb/s?",
+            "Hey {tweetTo} I'm paying for {internetSpeed} Mb/s but getting only {downloadResult} Mb/s?!? :("
         ],
-        "25": [
-            "Well {tweetTo} I guess {downloadResult}Mb/s is better than nothing, still not worth $100/mnth when I expect {internetSpeed}Mb/s"
+        "50": [
+            "Well {tweetTo} I guess {downloadResult} Mb/s is better than nothing, still not good it when I expect {internetSpeed} Mb/s",
+            "Uhh {tweetTo} I expect better than {downloadResult} Mb/s when I'm paying for {internetSpeed} Mb/s. Fix your network!",
+            "Hey {tweetTo} why am I only getting {downloadResult} Mb/s when I pay for {internetSpeed} Mb/s?"
         ]
     },
     "log": {

@@ -54,4 +54,5 @@ Or to run in the background:
 
 > python speedcomplainer.py > /dev/null &
 
-
+## Installation
+> pip install -r requirements.txt
