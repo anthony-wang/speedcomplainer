@@ -1,3 +1,5 @@
+# uses python2
+
 import os
 import sys
 import time
@@ -119,7 +121,7 @@ class ChuckJoke(threading.Thread):
     def doGetJoke(self):
         if debug:
             print 'Chuck - trying to get chucks joke'
-        url = "http://api.icndb.com/jokes/random"
+        url = "https://api.icndb.com/jokes/random"
         response = urllib.urlopen(url)
         data = json.loads(response.read())
         if debug:
@@ -184,11 +186,12 @@ class SpeedTest(threading.Thread):
                 print 'speedTestResults %s' % (speedTestResults['downloadResult'])
                 #print ChuckJoke.joke
             if speedTestResults['downloadResult'] < threshold:
-                message = messages[random.randint(0, len(messages) - 1)].replace('{tweetTo}', self.config['tweetTo']).replace('{internetSpeed}', self.config['internetSpeed']).replace('{downloadResult}', str(speedTestResults['downloadResult']))
+                message = messages[random.randint(0, len(messages) - 1)].replace('{tweetTo}', self.config['tweetTo']).replace('{internetSpeed}', self.config['internetSpeed']).replace('{internetUpSpeed}', self.config['internetUpSpeed']).replace('{downloadResult}', str(speedTestResults['downloadResult'])).replace('{uploadResult}', str(speedTestResults['uploadResult']))
+                message = message + str(self.config['appendText']) + '.'
 
-                # add some Chuck Norris to it
+                # add some Chuck Norris to the tweet
                 instance = ChuckJoke()
-                message = message + ' And by the way: "' +str(instance.doGetJoke()) + '"'
+                message = message + ' And by the way: "' + str(instance.doGetJoke()) + '"'
 
 
         if message:
