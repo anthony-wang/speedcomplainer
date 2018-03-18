@@ -80,7 +80,7 @@ class Monitor():
         chuckThread.start()
 
 class PingTest(threading.Thread):
-    def __init__(self, numPings=5, pingTimeout=2, maxWaitTime=6):
+    def __init__(self, numPings=5, pingTimeout=2, maxWaitTime=10):
         super(PingTest, self).__init__()
         self.numPings = numPings
         self.pingTimeout = pingTimeout
