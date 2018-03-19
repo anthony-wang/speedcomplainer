@@ -8,7 +8,8 @@ import daemon
 import signal
 import threading
 import twitter
-import json 
+import json
+from collections import OrderedDict # so that tweet messages are imported in order
 import random
 from logger import Logger
 import urllib, json
@@ -56,9 +57,11 @@ class Monitor():
         self.lastSpeedTest = None
         self.lastChuckJoke = None
 
-        self.pingCheckInterval = 1 * 60
-        self.speedTestInterval = 10 * 60
-        self.chuckJokeInterval = 10 * 60
+        self.timeFudgeFactor = 3
+
+        self.pingCheckInterval = 1 * 60 - self.timeFudgeFactor
+        self.speedTestInterval = 10 * 60 - self.timeFudgeFactor
+        self.chuckJokeInterval = 10 * 60 - self.timeFudgeFactor
 
     def run(self):
         if not self.lastPingCheck or (datetime.now() - self.lastPingCheck).total_seconds() >= self.pingCheckInterval:
@@ -167,7 +170,8 @@ class ChuckJoke(threading.Thread):
 class SpeedTest(threading.Thread):
     def __init__(self):
         super(SpeedTest, self).__init__()
-        self.config = json.load(open('./config.json'))
+        # parse config JSON file while preserving order (important for matching speed thresholds for tweet messages)
+        self.config = json.load(open('./config.json'), object_pairs_hook=OrderedDict)
         self.logger = Logger(self.config['log']['type'], { 'filename': self.config['log']['files']['speed'] })
 
     def run(self):
@@ -204,7 +208,10 @@ class SpeedTest(threading.Thread):
         return { 'date': datetime.now(), 'uploadResult': uploadResult, 'downloadResult': downloadResult, 'ping': pingResult }
 
     def logSpeedTestResults(self, speedTestResults):
-        self.logger.log([ speedTestResults['date'].strftime('%Y-%m-%d %H:%M:%S'), str(speedTestResults['uploadResult']), str(speedTestResults['downloadResult']), str(speedTestResults['ping']) ])
+        self.logger.log([speedTestResults['date'].strftime('%Y-%m-%d %H:%M:%S'),
+            str(speedTestResults['downloadResult']),
+            str(speedTestResults['uploadResult']),
+            str(speedTestResults['ping'])])
 
     def tweetResults(self, speedTestResults):
         thresholdMessages = self.config['tweetThresholds']
@@ -215,10 +222,12 @@ class SpeedTest(threading.Thread):
         for (threshold, messages) in thresholdMessages.items():
             threshold = float(threshold)
             if debug:
-                print 'threshold %f' % (threshold)
-                print 'speedTestResults DL %s : UL %s : ping %s' % (speedTestResults['downloadResult'], speedTestResults['uploadResult'], speedTestResults['ping'])
+                print 'threshold: %f' % (threshold)
+                print 'speedTestResults: DL %s : UL %s : ping %s' % (speedTestResults['downloadResult'], speedTestResults['uploadResult'], speedTestResults['ping'])
                 # print ChuckJoke.joke
             if speedTestResults['downloadResult'] < threshold:
+                if debug:
+                    print 'DL rate %f is lower than the threshold %f' % (speedTestResults['downloadResult'], threshold)
                 message = (messages[random.randint(0, len(messages) - 1)]
                             .replace('{tweetTo}', self.config['tweetTo'])
                             .replace('{internetSpeed}', self.config['internetSpeed'])
@@ -226,6 +235,7 @@ class SpeedTest(threading.Thread):
                             .replace('{downloadResult}', str(speedTestResults['downloadResult']))
                             .replace('{uploadResult}', str(speedTestResults['uploadResult'])))
                 message = message + ' ' + str(self.config['appendText']) + '.'
+                break
 
         # add some Chuck Norris to the tweet
         if chuckMode == True:
@@ -240,7 +250,7 @@ class SpeedTest(threading.Thread):
         # message = HTMLParser.HTMLParser().unescape(message)
 
         if debug:
-                print 'message %s' % (message)
+                print 'generated message: %s' % (message)
 
         if message:
             api = twitter.Api(consumer_key=self.config['twitter']['twitterConsumerKey'],
@@ -251,8 +261,8 @@ class SpeedTest(threading.Thread):
                 status = api.PostUpdates(message, continuation=u'\u2026')
 
                 if debug:
-                    print 'message %s...' % (message)
-                    print 'api %s' % (api)
+                    print 'tweeted message message: %s...' % (message)
+                    print 'api: %s' % (api)
 
 
 class DaemonApp():

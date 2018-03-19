@@ -21,20 +21,23 @@
             "Hey {tweetTo} I'm paying for {internetSpeed} Mb/s but getting only {downloadResult} Mb/s?!? :("
         ],
         "50": [
-            "Well {tweetTo} I guess {downloadResult} Mb/s is better than nothing, still not good enough when I expect {internetSpeed} Mb/s",
+            "Well {tweetTo} I guess {downloadResult} Mb/s is better than nothing, still not good enough when I expect {internetSpeed} Mb/s!",
             "Uhh {tweetTo} I expect better than {downloadResult} Mb/s when I'm paying for {internetSpeed} Mb/s. Fix your network!",
             "Hey {tweetTo} why am I only getting {downloadResult} Mb/s when I pay for {internetSpeed} Mb/s?"
         ],
         "150": [
-            "Well {tweetTo} I guess {downloadResult} Mb/s is better than nothing, still not good enough when I expect {internetSpeed} Mb/s",
+            "Well {tweetTo} I guess {downloadResult} Mb/s is better than nothing, still not good enough when I expect {internetSpeed} Mb/s!",
             "Uhh {tweetTo} I expect better than {downloadResult} Mb/s when I'm paying for {internetSpeed} Mb/s. Fix your network!",
             "Hey {tweetTo} why am I only getting {downloadResult} Mb/s when I pay for {internetSpeed} Mb/s?"
         ],
         "190": [
             "I'm almost getting my promised internet speed of DL {internetSpeed} Mb/s & UL {internetUpSpeed} Mb/s from {tweetTo}! Current speed of {downloadResult} Mb/s & {uploadResult} Mb/s is not bad :D"
         ],
-        "500": [
+        "200": [
             "Wow! {tweetTo} delivers on the promise of DL {internetSpeed} Mb/s & UL {internetUpSpeed} Mb/s internet speeds! Measured speed is currently {downloadResult} Mb/s & {uploadResult} Mb/s!"
+        ],
+        "1000": [
+            "What's this!? A MIRACLE!? My {tweetTo} internet is actually FASTER than the promised rates of DL {internetSpeed} Mb/s & UL {internetUpSpeed} Mb/s! I'm getting {downloadResult} Mb/s & {uploadResult} Mb/s right now!"
         ]
     },
     "log": {
