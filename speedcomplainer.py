@@ -12,15 +12,16 @@ import json
 import random
 from logger import Logger
 import urllib, json
-import HTMLParser
+from HTMLParser import HTMLParser
 
 shutdownFlag = False
-debug = False
+debug = True
+chuckMode = False
 
 def main(filename, argv):
     print "======================================"
-    print " Starting Speed Complainer!           "
-    print " Lets get noisy!                      "
+    print "  Starting Speed Complainer!          "
+    print "  Let's get noisy!                    "
     print "======================================"
 
     global shutdownFlag
@@ -48,22 +49,34 @@ def shutdownHandler(signo, stack_frame):
     print 'Got shutdown signal (%s: %s).' % (signo, stack_frame)
     shutdownFlag = True
 
+
 class Monitor():
     def __init__(self):
         self.lastPingCheck = None
         self.lastSpeedTest = None
         self.lastChuckJoke = None
 
+        self.pingCheckInterval = 1 * 60
+        self.speedTestInterval = 10 * 60
+        self.chuckJokeInterval = 10 * 60
+
     def run(self):
-        if not self.lastPingCheck or (datetime.now() - self.lastPingCheck).total_seconds() >= 60:
+        if not self.lastPingCheck or (datetime.now() - self.lastPingCheck).total_seconds() >= self.pingCheckInterval:
+            if debug:
+                print 'checking ping...'
             self.runPingTest()
             self.lastPingCheck = datetime.now()
 
-        if not self.lastSpeedTest or (datetime.now() - self.lastSpeedTest).total_seconds() >= 3600:
+        if not self.lastSpeedTest or (datetime.now() - self.lastSpeedTest).total_seconds() >= self.speedTestInterval:
+            if debug:
+                print 'checking speed...'
             self.runSpeedTest()
             self.lastSpeedTest = datetime.now()
-
-        self.runChuckJoke()
+            
+        if chuckMode == True and (datetime.now() - self.lastChuckJoke).total_seconds() >= self.chuckJokeInterval:
+            if debug:
+                print 'getting a Chuck joke...'
+            self.runChuckJoke()
 
     def runPingTest(self):
         pingThread = PingTest()
@@ -75,9 +88,11 @@ class Monitor():
 
     def runChuckJoke(self):
         if debug:
-            print 'going chuck....'
-        chuckThread = ChuckJoke()
-        chuckThread.start()
+            print 'going Chuck....'
+        if chuckMode == True:
+            chuckThread = ChuckJoke()
+            chuckThread.start()
+
 
 class PingTest(threading.Thread):
     def __init__(self, numPings=5, pingTimeout=2, maxWaitTime=10):
@@ -91,21 +106,32 @@ class PingTest(threading.Thread):
     def run(self):
         pingResults = self.doPingTest()
         if debug:
+            print 'checking ping done'
             print 'ping results: %s' % (pingResults)
         self.logPingResults(pingResults)
 
     def doPingTest(self):
-        # NOTE: the ping command is OS-specific. The below works on Linux (not even on MacOS!)
-        response = os.system("ping -c %s -W %s -w %s 8.8.8.8 > /dev/null 2>&1" % (self.numPings, (self.pingTimeout * 1000), self.maxWaitTime))
+        # NOTE: the ping command is OS-specific!
+        if sys.platform.startswith('linux'):
+            # The below works on Linux
+            response = os.system("ping -c %s -W %s -w %s 8.8.4.4 > /dev/null 2>&1" % (self.numPings, (self.pingTimeout * 1000), self.maxWaitTime))
+        elif sys.platform.startswith('darwin'):
+            # The below works on MacOS X
+            response = os.system("ping -c %s -W %s -t %s 8.8.4.4 > /dev/null 2>&1" % (self.numPings, (self.pingTimeout * 1000), self.maxWaitTime))
+        elif sys.platform.startswith('win32'):
+            # The below works on Windows
+            response = os.system("ping -n %s -w %s 8.8.4.4 > NUL 2>&1" % (self.numPings, (self.pingTimeout * 1000)))
+
         success = 0
         if debug:
-            print 'ping test response (0==success): %s' % (response)
+            print 'ping test response (0 == success): %s' % (response)
         if response == 0:
             success = 1
         return { 'date': datetime.now(), 'success': success }
 
     def logPingResults(self, pingResults):
-        self.logger.log([ pingResults['date'].strftime('%Y-%m-%d %H:%M:%S'), str(pingResults['success'])])
+        self.logger.log([pingResults['date'].strftime('%Y-%m-%d %H:%M:%S'), str(pingResults['success'])])
+
 
 class ChuckJoke(threading.Thread):
     def __init__(self, joke=""):
@@ -115,6 +141,8 @@ class ChuckJoke(threading.Thread):
         self.joke = ""
         self.config = json.load(open('./config.json'))
         self.logger = Logger(self.config['log']['type'], { 'filename': self.config['log']['files']['chuck'] })
+        if debug:
+            print 'got a Chuck joke'
     
     def run(self):
         chucksJoke = self.doGetJoke()
@@ -135,6 +163,7 @@ class ChuckJoke(threading.Thread):
     def logChuckJoke(self, joke):
         self.logger.log([str(datetime.now()), str(joke)])
 
+
 class SpeedTest(threading.Thread):
     def __init__(self):
         super(SpeedTest, self).__init__()
@@ -144,6 +173,7 @@ class SpeedTest(threading.Thread):
     def run(self):
         speedTestResults = self.doSpeedTest()
         if debug:
+            print 'checking speed done'
             print 'speed test: %s' % (speedTestResults)
         self.logSpeedTestResults(speedTestResults)
         self.tweetResults(speedTestResults)
@@ -168,8 +198,8 @@ class SpeedTest(threading.Thread):
         pingResult = float(pingResult.replace('Ping: ', '').replace(' ms', ''))
         downloadResult = float(downloadResult.replace('Download: ', '').replace(' Mbit/s', ''))
         uploadResult = float(uploadResult.replace('Upload: ', '').replace(' Mbit/s', ''))
-        if debug:
-            print 'speed test results: (%f: %f: ping %f).' % (downloadResult, uploadResult, pingResult)
+
+        print 'speed test results: (DL %#.2f : UL %#.2f : ping %#.3f).' % (downloadResult, uploadResult, pingResult)
 
         return { 'date': datetime.now(), 'uploadResult': uploadResult, 'downloadResult': downloadResult, 'ping': pingResult }
 
@@ -186,21 +216,29 @@ class SpeedTest(threading.Thread):
             threshold = float(threshold)
             if debug:
                 print 'threshold %f' % (threshold)
-                print 'speedTestResults %s' % (speedTestResults['downloadResult'])
+                print 'speedTestResults DL %s : UL %s : ping %s' % (speedTestResults['downloadResult'], speedTestResults['uploadResult'], speedTestResults['ping'])
                 # print ChuckJoke.joke
             if speedTestResults['downloadResult'] < threshold:
-                message = messages[random.randint(0, len(messages) - 1)].replace('{tweetTo}', self.config['tweetTo']).replace('{internetSpeed}', self.config['internetSpeed']).replace('{internetUpSpeed}', self.config['internetUpSpeed']).replace('{downloadResult}', str(speedTestResults['downloadResult'])).replace('{uploadResult}', str(speedTestResults['uploadResult']))
+                message = (messages[random.randint(0, len(messages) - 1)]
+                            .replace('{tweetTo}', self.config['tweetTo'])
+                            .replace('{internetSpeed}', self.config['internetSpeed'])
+                            .replace('{internetUpSpeed}', self.config['internetUpSpeed'])
+                            .replace('{downloadResult}', str(speedTestResults['downloadResult']))
+                            .replace('{uploadResult}', str(speedTestResults['uploadResult'])))
                 message = message + ' ' + str(self.config['appendText']) + '.'
 
         # add some Chuck Norris to the tweet
-        # instance = ChuckJoke()
-        # message = message + ' And by the way: "' + str(instance.doGetJoke()) + '"'
+        if chuckMode == True:
+            instance = ChuckJoke()
+            message = message + ' And by the way: "' + str(instance.doGetJoke()) + '"'
 
         # truncate message if it's over Twitter's max character limit. Not necessary using when using the "PostUpdates" method from twitter API
         # if len(message) > 500:
         #     message = message[500] + '...'
 
-        message = HTMLParser.HTMLParser().unescape(message)
+        # unescape HTML characters in tweet message. Fails when it encounters ampersands '&' in the message...
+        # message = HTMLParser.HTMLParser().unescape(message)
+
         if debug:
                 print 'message %s' % (message)
 
@@ -215,7 +253,6 @@ class SpeedTest(threading.Thread):
                 if debug:
                     print 'message %s...' % (message)
                     print 'api %s' % (api)
-
 
 
 class DaemonApp():
@@ -243,6 +280,3 @@ if __name__ == '__main__':
     dRunner.daemon_context.umask = 0o002
     dRunner.daemon_context.signal_map = { signal.SIGTERM: 'terminate', signal.SIGUP: 'terminate' }
     dRunner.do_action()
-
-
-
