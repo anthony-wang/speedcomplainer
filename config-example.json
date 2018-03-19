@@ -16,13 +16,13 @@
             "Seriously {tweetTo}, why is my internet so slow?! I pay for {internetSpeed} Mb/s but I'm only getting {downloadResult} Mb/s?!? This is ridiculous! :'("
         ],
         "60": [
-            "Uhh {tweetTo} I expect better than {downloadResult} Mb/s when I'm paying for {internetSpeed} Mb/s, that's only {fractionOfSpeed}% of your promised speed! Fix your network! :(",
+            "Uhh {tweetTo} I expect better than {downloadResult} Mb/s when I'm paying for {internetSpeed} Mb/s, that's only {fractionOfSpeed}% of your advertised speed! Fix your network! :(",
             "Hey {tweetTo} why am I only getting {downloadResult} Mb/s when I pay for {internetSpeed} Mb/s? Should I also only pay {fractionOfSpeed}% of my monthly bill, since that's only how much I am getting?! :(",
             "Hey {tweetTo} I'm paying for {internetSpeed} Mb/s but getting only {downloadResult} Mb/s?!? Should I also only pay {fractionOfSpeed}% of my monthly bill, since that's only how much I am getting?! :("
         ],
         "120": [
-            "Uhh {tweetTo} I expect better than {downloadResult} Mb/s when I'm paying for {internetSpeed} Mb/s. I'm only getting {fractionOfSpeed}% of the promised speed! Fix your network!",
-            "Hey {tweetTo} why am I only getting {downloadResult} Mb/s when I pay for {internetSpeed} Mb/s? I'm only getting {fractionOfSpeed}% of the promised speed!"
+            "Uhh {tweetTo} I expect better than {downloadResult} Mb/s when I'm paying for {internetSpeed} Mb/s. I'm only getting {fractionOfSpeed}% of the advertised speed! Fix your network!",
+            "Hey {tweetTo} why am I only getting {downloadResult} Mb/s when I pay for {internetSpeed} Mb/s? I'm only getting {fractionOfSpeed}% of the advertised speed!"
         ],
         "150": [
             "Well {tweetTo} I guess {downloadResult} Mb/s is better than nothing, still not good enough when I expect {internetSpeed} Mb/s!",
@@ -30,13 +30,13 @@
             "Hey {tweetTo} why am I only getting {downloadResult} Mb/s when I pay for {internetSpeed} Mb/s?"
         ],
         "190": [
-            "I'm almost getting my promised internet speed of DL {internetSpeed} Mb/s & UL {internetUpSpeed} Mb/s from {tweetTo}! Current speed of {downloadResult} Mb/s & {uploadResult} Mb/s (about {fractionOfSpeed}% of the promised speed) is not bad :D"
+            "I'm almost getting my advertised internet speed of DL {internetSpeed} Mb/s & UL {internetUpSpeed} Mb/s from {tweetTo}! Current speed of {downloadResult} Mb/s & {uploadResult} Mb/s (about {fractionOfSpeed}% of the advertised speed) is not bad :D"
         ],
         "200": [
             "Wow! {tweetTo} delivers on the promise of DL {internetSpeed} Mb/s & UL {internetUpSpeed} Mb/s internet speeds! Measured speed is currently {downloadResult} Mb/s & {uploadResult} Mb/s!"
         ],
         "1000": [
-            "What's this!? A MIRACLE!? My {tweetTo} internet is actually FASTER than the promised rates of DL {internetSpeed} Mb/s & UL {internetUpSpeed} Mb/s! I'm getting {downloadResult} Mb/s & {uploadResult} Mb/s right now!"
+            "What's this!? A MIRACLE!? My {tweetTo} internet is actually FASTER than the advertised speeds of DL {internetSpeed} Mb/s & UL {internetUpSpeed} Mb/s! I'm getting {downloadResult} Mb/s & {uploadResult} Mb/s right now!"
         ]
     },
     "log": {
