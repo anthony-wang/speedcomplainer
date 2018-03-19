@@ -56,12 +56,14 @@ class Monitor():
         self.lastPingCheck = None
         self.lastSpeedTest = None
         self.lastChuckJoke = None
+        self.lastTweet = None
 
         self.timeFudgeFactor = 3
 
         self.pingCheckInterval = 1 * 60 - self.timeFudgeFactor
         self.speedTestInterval = 10 * 60 - self.timeFudgeFactor
         self.chuckJokeInterval = 10 * 60 - self.timeFudgeFactor
+        self.TweetInterval = 30 * 60 - self.timeFudgeFactor
 
     def run(self):
         if not self.lastPingCheck or (datetime.now() - self.lastPingCheck).total_seconds() >= self.pingCheckInterval:
@@ -76,7 +78,7 @@ class Monitor():
             self.runSpeedTest()
             self.lastSpeedTest = datetime.now()
             
-        if chuckMode == True and (datetime.now() - self.lastChuckJoke).total_seconds() >= self.chuckJokeInterval:
+        if chuckMode and not self.lastChuckJoke and (datetime.now() - self.lastChuckJoke).total_seconds() >= self.chuckJokeInterval:
             if debug:
                 print 'getting a Chuck joke...'
             self.runChuckJoke()
@@ -251,19 +253,26 @@ class SpeedTest(threading.Thread):
         # message = HTMLParser.HTMLParser().unescape(message)
 
         if debug:
-                print 'generated message: %s' % (message)
+            print 'generated message: %s' % (message)
 
-        if message:
-            api = twitter.Api(consumer_key=self.config['twitter']['twitterConsumerKey'],
-                            consumer_secret=self.config['twitter']['twitterConsumerSecret'],
-                            access_token_key=self.config['twitter']['twitterToken'],
-                            access_token_secret=self.config['twitter']['twitterTokenSecret'])
-            if api:
-                status = api.PostUpdates(message, continuation=u'\u2026')
+        if not Monitor().lastTweet or (datetime.now() - Monitor().lastTweet).total_seconds() >= Monitor().TweetInterval:
+            if debug:
+                print 'last tweet: %s' % (Monitor().lastTweet)
+                print 'tweet interval: %s' % (Monitor().TweetInterval)
+                print 'checking ping...'
+            Monitor().lastTweet = datetime.now()
 
-                if debug:
-                    print 'tweeted message message: %s...' % (message)
-                    print 'api: %s' % (api)
+            if message:
+                api = twitter.Api(consumer_key=self.config['twitter']['twitterConsumerKey'],
+                                consumer_secret=self.config['twitter']['twitterConsumerSecret'],
+                                access_token_key=self.config['twitter']['twitterToken'],
+                                access_token_secret=self.config['twitter']['twitterTokenSecret'])
+                if api:
+                    status = api.PostUpdates(message, continuation=u'\u2026')
+
+                    if debug:
+                        print 'tweeted message message: %s...' % (message)
+                        print 'api: %s' % (api)
 
 
 class DaemonApp():
