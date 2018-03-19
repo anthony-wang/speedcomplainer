@@ -98,7 +98,7 @@ class Monitor():
 
 
 class PingTest(threading.Thread):
-    def __init__(self, numPings=5, pingTimeout=2, maxWaitTime=10):
+    def __init__(self, numPings=3, pingTimeout=2, maxWaitTime=10):
         super(PingTest, self).__init__()
         self.numPings = numPings
         self.pingTimeout = pingTimeout
