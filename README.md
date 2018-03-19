@@ -16,11 +16,13 @@ Configuration is handled by a basic JSON file. Things that can be configured are
 * `tweetTo`: This is a account (or list of accounts) that will be @ mentioned (include the @!)
 * `internetSpeed`: This is the downstream speed (in Mb/sec) you're paying for (and presumably not getting).
 * `internetUpSpeed`: This is the upstream speed (in Mb/sec) you're paying for (and presumably not getting).
-* `tweetThresholds`: This is a list of messages that will be tweeted when you hit a threshold of crappiness. Placeholders are:
+* `tweetThresholds`: This is a list of messages that will be tweeted when you hit a threshold of crappiness.
+* Placeholders in the Tweet messages are:
     * `{tweetTo}` - The above tweetTo configuration.
     * `{internetSpeed}` - The above internetSpeed configuration.
     * `{downloadResult}` - The poor download speed you're getting.
     * `{uploadResult}` - The poor upload speed you're getting.
+    * `{fractionOfSpeed}` - The (calculated) percentage of DL speed that you're getting compared to your ISP's advertised speed (`{internetSpeed}`)
 
 Threshold Example (remember to limit your messages to 240 characters or less!):
 ```json
