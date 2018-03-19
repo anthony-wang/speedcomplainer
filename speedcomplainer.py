@@ -232,6 +232,7 @@ class SpeedTest(threading.Thread):
                             .replace('{tweetTo}', self.config['tweetTo'])
                             .replace('{internetSpeed}', self.config['internetSpeed'])
                             .replace('{internetUpSpeed}', self.config['internetUpSpeed'])
+                            .replace('{fractionOfSpeed}', "%.2f" % (round(float(speedTestResults['downloadResult']) / float(self.config['internetSpeed']) * 100, 2)))
                             .replace('{downloadResult}', str(speedTestResults['downloadResult']))
                             .replace('{uploadResult}', str(speedTestResults['uploadResult'])))
                 message = message + ' ' + str(self.config['appendText']) + '.'
