@@ -286,6 +286,7 @@ class DaemonApp():
     def run(self):
         main(__file__, sys.argv[1:])
 
+
 if __name__ == '__main__':
     main(__file__, sys.argv[1:])
 
