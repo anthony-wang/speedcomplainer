@@ -14,18 +14,19 @@
             "There once was a time where dial-up was the fastest internet connection ever. Thanks to {tweetTo}, we can experience that even TODAY! I'm getting internet speeds of {downloadResult} Mb/s when I paid for {internetSpeed} Mb/s?! T.T",
             "Seriously {tweetTo} what's going on with the internet?! I'm supposed to get {internetSpeed} Mb/s but getting only {downloadResult} Mb/s?!? This is ridiculous! :'(",
             "OMG {tweetTo} what's going on with the internet?! I'm supposed to get {internetSpeed} Mb/s but getting only {downloadResult} Mb/s?!? This is ridiculous! :'(",
-            "Hello {tweetTo}, why is my internet so slow?! I pay for {internetSpeed} Mb/s but I'm only getting {downloadResult} Mb/s?!? This is ridiculous! :'("
+            "Hello {tweetTo}, why is my internet so slow?! I pay for {internetSpeed} Mb/s but I'm only getting {downloadResult} Mb/s?!? This is ridiculous! :'(",
+            "{tweetTo} only gives me {fractionOfSpeed}% of the internet speed I pay for. So I will also only pay {fractionOfSpeed}% of my bill -_-'"
         ],
         "60": [
             "Uhh {tweetTo} I expect better than {downloadResult} Mb/s when I'm paying for {internetSpeed} Mb/s, that's only {fractionOfSpeed}% of your advertised speed! Fix your network! :(",
-            "Hello {tweetTo} why am I only getting {downloadResult} Mb/s when I pay for {internetSpeed} Mb/s? Should I also only pay {fractionOfSpeed}% of my monthly bill, since that's only how much I am getting?! :(",
-            "Hey {tweetTo} I'm paying for {internetSpeed} Mb/s, but getting only {downloadResult} Mb/s?!? Should I also only pay {fractionOfSpeed}% of my monthly bill, since that's only how much I am getting?! :("
+            "Hello {tweetTo} why am I only getting {downloadResult} Mb/s when I pay for {internetSpeed} Mb/s? Should I also only pay {fractionOfSpeed}% of my monthly bill, since that's how much speed I am getting?! :(",
+            "Hey {tweetTo} I'm paying for {internetSpeed} Mb/s, but getting only {downloadResult} Mb/s?!? Should I also only pay {fractionOfSpeed}% of my monthly bill, since that's how much speed I am getting?! :("
         ],
         "120": [
             "Uhh {tweetTo} I expect better than {downloadResult} Mb/s when I'm paying for {internetSpeed} Mb/s. I'm only getting {fractionOfSpeed}% of the advertised speed! Fix your network!",
             "Hey {tweetTo} why am I only getting {downloadResult} Mb/s when I pay for {internetSpeed} Mb/s? I'm only getting {fractionOfSpeed}% of the advertised speed!"
         ],
-        "150": [
+        "165": [
             "Well {tweetTo} I guess {downloadResult} Mb/s is better than nothing, still not good enough when I expect {internetSpeed} Mb/s!",
             "Uhh {tweetTo} I expect better than {downloadResult} Mb/s when I'm paying for {internetSpeed} Mb/s. Fix your network!",
             "Hey {tweetTo} why am I only getting {downloadResult} Mb/s when I pay for {internetSpeed} Mb/s?"

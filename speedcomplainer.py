@@ -28,6 +28,9 @@ def main(filename, argv):
     global shutdownFlag
     signal.signal(signal.SIGINT, shutdownHandler)
 
+    if debug:
+        print 'current time: %s' % (datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+
     monitor = Monitor()
 
     while not shutdownFlag:
@@ -94,7 +97,7 @@ class Monitor():
     def runChuckJoke(self):
         if debug:
             print 'going Chuck....'
-        if chuckMode == True:
+        if chuckMode:
             chuckThread = ChuckJoke()
             chuckThread.start()
 
@@ -241,7 +244,7 @@ class SpeedTest(threading.Thread):
                 break
 
         # add some Chuck Norris to the tweet
-        if chuckMode == True:
+        if chuckMode:
             instance = ChuckJoke()
             message = message + ' And by the way: "' + str(instance.doGetJoke()) + '"'
 
