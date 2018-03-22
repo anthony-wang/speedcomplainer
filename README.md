@@ -1,6 +1,8 @@
 # speedcomplainer
 A Python app that tests your internet connection and then complains to your Internet Service Provider (and logs to a data store if you'd like). May not be for the faint of heart.
 
+It requires Python 2. Also check out `requirements.txt` for other required dependencies.
+
 Online at:
 > https://twitter.com/not_GigaSpeed
 
@@ -8,7 +10,7 @@ Online at:
 
 ## Configuration
 Configuration is handled by a basic JSON file. Things that can be configured are:
-* twitter
+* twitter API - get your credentials from https://developer.twitter.com/
     * `twitterToken`: This is your app access token
     * `twitterConsumerKey`: This is your Consumer Key (API Key)
     * `twitterTokenSecret`: This is your Access Token Secret
