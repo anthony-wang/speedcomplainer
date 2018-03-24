@@ -61,7 +61,7 @@ class Monitor():
         self.lastChuckJoke = None
         self.lastTweet = None
 
-        self.timeFudgeFactor = 4
+        self.timeFudgeFactor = 3
 
         self.pingCheckInterval = 1 * 60 - self.timeFudgeFactor
         self.speedTestInterval = 10 * 60 - self.timeFudgeFactor
