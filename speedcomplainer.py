@@ -205,8 +205,8 @@ class SpeedTest(threading.Thread):
         uploadResult = resultSet[2]
 
         pingResult = float(pingResult.replace('Ping: ', '').replace(' ms', ''))
-        downloadResult = float(downloadResult.replace('Download: ', '').replace(' Mbit/s', ''))
-        uploadResult = float(uploadResult.replace('Upload: ', '').replace(' Mbit/s', ''))
+        downloadResult = float(downloadResult.replace('Download: ', '').replace(' Mbit/s', '').replace(' Mbits/s', ''))
+        uploadResult = float(uploadResult.replace('Upload: ', '').replace(' Mbit/s', '').replace(' Mbits/s', ''))
 
         print 'speed test results: (DL %#.2f : UL %#.2f : ping %#.3f).' % (downloadResult, uploadResult, pingResult)
 
